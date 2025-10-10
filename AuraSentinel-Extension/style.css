@@ -1,0 +1,145 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  width: 350px;
+  margin: 0;
+  padding: 15px;
+  background-color: #f4f6f8;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+.header {
+  text-align: center;
+  width: 100%;
+}
+.header h1 {
+  margin: 0 0 10px 0;
+  font-size: 24px;
+  color: #333;
+}
+/* Tab Styles */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+  width: 100%;
+  display: flex;
+}
+.tab button {
+  background-color: inherit;
+  flex-grow: 1;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 10px 12px;
+  transition: 0.3s;
+  font-size: 14px;
+  border-right: 1px solid #ccc;
+}
+.tab button:last-child {
+  border-right: none;
+}
+.tab button:hover {
+  background-color: #ddd;
+}
+.tab button.active {
+  background-color: #007aff;
+  color: white;
+}
+.tabcontent {
+  display: none;
+  padding: 15px 0px 0px 0px;
+  width: 100%;
+}
+#URL_Analysis, #Text_Analysis {
+  text-align: center;
+}
+.url-display {
+  width: 95%;
+  padding: 10px;
+  margin: 0 auto 15px auto;
+  border-radius: 8px;
+  font-weight: bold;
+  border: 2px solid #ddd;
+  background-color: #fff;
+  word-wrap: break-word;
+}
+.url-display p { margin: 0; }
+.url-phishing { border-color: #e53935; color: #e53935; }
+.url-legitimate { border-color: #43a047; color: #43a047; }
+#analyze-button, #analyze-text-button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background-color: #007aff;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+#analyze-button:disabled, #analyze-text-button:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+#analyze-button:hover:not(:disabled), #analyze-text-button:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+#result-container, #text-result-container {
+  width: 100%;
+  margin-top: 20px;
+  text-align: center;
+}
+.status-phishing, .status-high-risk { color: #e53935; }
+.status-legitimate, .status-safe { color: #43a047; }
+#message, #text-explanation {
+  font-size: 14px;
+  color: #555;
+  margin-top: 5px;
+  margin-bottom: 15px;
+}
+.hidden { display: none; }
+#loading-spinner, #text-loading-spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #007aff;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+  margin-top: 20px;
+}
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+.reasons-container {
+  width: 100%;
+  margin-top: 10px;
+  text-align: left;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 10px;
+}
+.reasons-container ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+.reasons-container li {
+  font-size: 13px;
+  color: #333;
+  padding: 5px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.reasons-container li:last-child {
+  border-bottom: none;
+}
+#text-input {
+  width: 95%;
+  height: 100px;
+  padding: 5px;
+  font-family: inherit;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}

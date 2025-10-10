@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Aura Sentinel - AI Phishing Detection</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Vanta.js for animated 3D background -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta/dist/vanta.waves.min.js"></script>
+
+  <!-- Chart.js for graphs -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body, html {
+      margin: 0; padding: 0;
+      font-family: Arial, sans-serif;
+      color: white;
+      overflow-x: hidden;
+    }
+    #vanta-bg {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+    header {
+      text-align: center;
+      padding: 80px 20px;
+    }
+    header h1 {
+      font-size: 3rem;
+      text-shadow: 0 0 20px cyan;
+    }
+    header img {
+      width: 120px;
+      margin-bottom: 20px;
+    }
+    .btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 25px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 30px;
+      background: linear-gradient(45deg, cyan, purple);
+      color: white;
+      text-decoration: none;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px cyan;
+    }
+    section {
+      padding: 60px 20px;
+      text-align: center;
+      max-width: 1000px;
+      margin: auto;
+    }
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+    .card {
+      background: rgba(0,0,0,0.6);
+      padding: 20px;
+      border-radius: 15px;
+      width: 250px;
+      transition: 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 0 20px cyan;
+    }
+    .reviews input, .reviews textarea {
+      width: 80%;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: rgba(0,0,0,0.7);
+    }
+    /* Chatbot */
+    #chatbot {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 320px;
+      max-height: 440px;
+      background: rgba(0,0,0,0.89);
+      border: 2px solid cyan;
+      border-radius: 15px;
+      display: none;
+      flex-direction: column;
+      z-index: 1001;
+    }
+    #chatbot header {
+      background: cyan;
+      color: black;
+      padding: 10px;
+      border-radius: 15px 15px 0 0;
+      font-weight: bold;
+      text-align: center;
+    }
+    #chatbot-messages {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+      font-size: 0.98rem;
+      background: #e3f4ff;
+      color: #222;
+    }
+    .chat-msg-bot {
+      background: #e2eeff; color: #10539f; border-radius: 10px;
+      margin: 7px 0; padding: 9px 13px; max-width: 88%; text-align: left;
+    }
+    .chat-msg-user {
+      background: #1b7cff; color: #fff; border-radius: 10px;
+      margin: 7px 0 7px auto; padding: 9px 13px; max-width: 88%; text-align: right;
+    }
+    #chatbot-input-area {
+      display: flex;
+      border-top: 1px solid #ccc;
+      background: #eef6ff;
+      border-radius: 0 0 15px 15px;
+    }
+    #chatbot-input {
+      border: none;
+      padding: 10px;
+      flex: 1;
+      font-size: 1em;
+      border-radius: 0 0 0 15px;
+      outline: none;
+    }
+    #chatbot-send {
+      border: none;
+      background: #1b7cff;
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 0 0 15px 0;
+      cursor: pointer;
+      font-size: 1.05em;
+      font-weight: bold;
+    }
+    #chatbot-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: cyan;
+      border: none;
+      border-radius: 50%;
+      width: 50px; height: 50px;
+      cursor: pointer;
+      font-size: 24px;
+      font-weight: bold;
+      z-index: 1002;
+      box-shadow: 0 4px 15px #00ffff60;
+      color: #00324d;
+      transition: 0.2s;
+    }
+    #chatbot-btn:hover {
+      background: #00bfff;
+      color: #222;
+      transform: scale(1.08);
+    }
+    /* Login Page */
+    #login-page {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, #0f0f2e, #1a0033);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+    #login-box {
+      background: rgba(0,0,0,0.8);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px cyan;
+      text-align: center;
+      width: 300px;
+    }
+    #login-box img {
+      width: 100px;
+      margin-bottom: 20px;
+    }
+    #login-box input {
+      width: 90%;
+      margin: 10px 0;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+    }
+    #login-box button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: cyan;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <!-- 3D Background -->
+  <div id="vanta-bg"></div>
+
+  <!-- Login Page -->
+  <div id="login-page">
+    <div id="login-box">
+      <img src="https://dummyimage.com/200x200/00ffff/000000&text=Decoderz" alt="Decoderz Logo" />
+      <h2>Login to Aura Sentinel</h2>
+      <input type="email" id="email" placeholder="Email" required /><br />
+      <input type="password" id="password" placeholder="Password" required /><br />
+      <button onclick="login()">Login</button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <header>
+    <img src="https://dummyimage.com/200x200/00ffff/000000&text=Decoderz" alt="Decoderz Logo" />
+    <h1>🛡️ Aura Sentinel</h1>
+    <p>AI-enabled Phishing Link Detection & Alert System</p>
+    <a href="#" class="btn">⬇ Download Extension</a>
+  </header>
+
+  <section id="about">
+    <h2>About Our Idea</h2>
+    <p>
+      Aura Sentinel is an innovative browser extension developed by our team of first-year students —
+      <b>Lakshya Goyal,Aabir Das, Niyati Saxena,Devansh Raizada , </b>
+      Our mission is to protect internet users from the growing threat of phishing websites and online scams.
+      Our extension uses AI-enabled detection to catch unauthorized and malicious websites before they can harm you.
+      What makes Aura Sentinel unique is its combination of real-time link scanning, alert system, and a user-friendly interface.
+      We are proud to have achieved <b>3rd position in the Mini Hackathon at GLA Noida Campus</b>, which motivated us to take this idea forward.
+      We believe our project has the potential to protect millions of users from fraud and raise awareness about cyber safety.
+    </p>
+  </section>
+
+  <section id="stats">
+    <h2>Cyber Scam Statistics</h2>
+    <canvas id="scamChart" width="400" height="200"></canvas>
+  </section>
+
+  <section id="features">
+    <h2>Key Features</h2>
+    <div class="features">
+      <div class="card">🚨 Real-time Phishing Detection</div>
+      <div class="card">🔔 Instant Alerts & Notifications</div>
+      <div class="card">🛡️ Data Safety & Privacy Protection</div>
+      <div class="card">💬 Built-in Chatbot Support</div>
+    </div>
+  </section>
+
+  <section class="reviews">
+    <h2>User Reviews</h2>
+    <input type="text" id="review-name" placeholder="Your name" /><br />
+    <textarea id="review-text" placeholder="Write your review"></textarea><br />
+    <button class="btn" onclick="addReview()">Submit Review</button>
+    <div id="review-list"></div>
+  </section>
+
+  <footer>
+    <p>Made with ❤️ by Team Aura Sentinel | Customer Care: +91-9876543210</p>
+  </footer>
+
+  <!-- Chatbot -->
+  <div id="chatbot">
+    <header>Aura Sentinel Assistant</header>
+    <div id="chatbot-messages"></div>
+    <div id="chatbot-input-area">
+      <input type="text" id="chatbot-input" placeholder="Ask something..." />
+      <button id="chatbot-send">➤</button>
+    </div>
+  </div>
+  <button id="chatbot-btn">💬</button>
+
+  <script>
+    // Background
+    VANTA.WAVES({
+      el: "#vanta-bg",
+      mouseControls: true,
+      touchControls: true,
+      minHeight: 200.0,
+      minWidth: 200.0,
+      scale: 1.0,
+      scaleMobile: 1.0,
+      color: 0x111111,
+      shininess: 50,
+      waveHeight: 20,
+      waveSpeed: 0.8,
+      zoom: 0.85,
+    });
+
+    // Login simulation
+    function login() {
+      document.getElementById("login-page").style.display = "none";
+    }
+
+    // Reviews
+    function addReview() {
+      let name = document.getElementById("review-name").value;
+      let text = document.getElementById("review-text").value;
+      if (name && text) {
+        let div = document.createElement("div");
+        div.style.margin = "10px";
+        div.style.padding = "10px";
+        div.style.background = "rgba(0,0,0,0.6)";
+        div.style.borderRadius = "10px";
+        div.innerHTML = "<b>" + name + ":</b> " + text;
+        document.getElementById("review-list").appendChild(div);
+        document.getElementById("review-name").value = "";
+        document.getElementById("review-text").value = "";
+      }
+    }
+
+    // Scam Graph
+    const ctx = document.getElementById("scamChart").getContext("2d");
+    new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: ["2020", "2021", "2022", "2023"],
+        datasets: [
+          {
+            label: "Phishing Scam Cases (in millions)",
+            data: [1.2, 2.5, 4.0, 6.2],
+            backgroundColor: "rgba(0, 255, 255, 0.6)",
+            borderColor: "cyan",
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: true },
+        },
+      },
+    });
+
+    // Chatbot logic
+    const chatbotBtn = document.getElementById("chatbot-btn");
+    const chatbot = document.getElementById("chatbot");
+    const chatbotInput = document.getElementById("chatbot-input");
+    const chatbotSend = document.getElementById("chatbot-send");
+    const chatbotMessages = document.getElementById("chatbot-messages");
+
+    function addBotMsg(txt) {
+      let div = document.createElement("div");
+      div.className = "chat-msg-bot";
+      div.textContent = txt;
+      chatbotMessages.appendChild(div);
+      chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+    }
+    function addUserMsg(txt) {
+      let div = document.createElement("div");
+      div.className = "chat-msg-user";
+      div.textContent = txt;
+      chatbotMessages.appendChild(div);
+      chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+    }
+
+    function getBotResponse(input) {
+      var msg = input.toLowerCase().replace(/[?.!]/g, "");
+      if (msg.includes("install")) {
+        return "To install Aura Sentinel, go to the official Aura Sentinel website, click the Download button, and follow the steps to add the extension to your browser. If you need help, contact support at support@aurasentinel.com.";
+      }
+      if (
+        msg.includes("lag") ||
+        msg.includes("lagging") ||
+        msg.includes("slow browser") ||
+        msg.includes("browser is lagging")
+      ) {
+        return "Is your browser lagging because of the Aura Sentinel extension? Try disabling unused extensions, clearing your browser cache, and restarting. If the issue continues, reinstall Aura Sentinel or contact support.";
+      }
+      if (
+        msg.includes("extension") &&
+        (msg.includes("not downloading") ||
+          msg.includes("download issue") ||
+          msg.includes("download problem"))
+      ) {
+        return "Is your Aura Sentinel extension not downloading? Check your internet, clear cache, try incognito, or get the latest version from the official Chrome Web Store. For extra help, reach out to support.";
+      }
+      if (msg.includes("extension")) {
+        return "Is your Aura Sentinel extension not downloading or causing issues? Try again, make sure your browser is up to date, or contact our support for help.";
+      }
+      if (
+        msg.includes("hello") ||
+        msg.includes("hi") ||
+        msg.includes("hey")
+      ) {
+        return "Hello! Welcome to Aura Sentinel, your AI-powered security buddy. How can I help you today?";
+      }
+      if (msg.includes("how are you")) {
+        return "I'm an AI bot, but always ready to assist and protect you!";
+      }
+      if (
+        msg.includes("what is aura sentinel") ||
+        msg.includes("what is this") ||
+        msg.includes("who are you")
+      ) {
+        return "Aura Sentinel is a 100% free AI tool that protects you from phishing and helps you check links for safety.";
+      }
+      if (
+        msg.includes("phishing") ||
+        msg.includes("scam") ||
+        msg.includes("fraud") ||
+        msg.includes("what is phishing")
+      ) {
+        return "Phishing is when attackers create fake emails or websites to steal your personal info. Aura Sentinel uses AI to detect and warn you about these threats faster than browser extensions or built-in services.";
+      }
+      if (
+        msg.includes("features") ||
+        msg.includes("can you do") ||
+        msg.includes("abilities") ||
+        msg.includes("services")
+      ) {
+        return "Aura Sentinel detects phishing, verifies links, answers security questions, and offers real-time alerts — all free.";
+      }
+      if (
+        msg.includes("price") ||
+        msg.includes("cost") ||
+        msg.includes("subscription") ||
+        msg.includes("free")
+      ) {
+        return "Aura Sentinel is completely free — no subscriptions or hidden charges.";
+      }
+      if (
+        msg.includes("support") ||
+        msg.includes("contact") ||
+        msg.includes("help")
+      ) {
+        return "Contact us anytime at support@aurasentinel.com. We're here to support your safety 24/7!";
+      }
+      if (msg.includes("thank you") || msg.includes("thanks")) {
+        return "You're welcome! If you need more help, just ask.";
+      }
+      if (msg.includes("goodbye") || msg.includes("bye") || msg.includes("see you")) {
+        return "Goodbye! Stay secure with Aura Sentinel.";
+      }
+      if (
+        msg.includes("how does it work") ||
+        msg.includes("how it works") ||
+        msg.includes("how do you detect")
+      ) {
+        return "Aura Sentinel uses advanced AI algorithms to scan URLs in real-time, compare against known threats, and alert you of any risks.";
+      }
+      if (msg.includes("team") || msg.includes("about")) {
+        return "Aura Sentinel was created during a hackathon to make powerful cybersecurity tools free and accessible for everyone.";
+      }
+      if (
+        msg.includes("why do we need you") ||
+        msg.includes("why aura sentinel") ||
+        msg.includes("need aura sentinel")
+      ) {
+        return "Aura Sentinel uses AI to catch even the newest phishing methods. We analyze in real-time for smarter protection.";
+      }
+      if (
+        msg.includes("how are you different") ||
+        msg.includes("different from google") ||
+        msg.includes("google safe browsing") ||
+        msg.includes("browser warns")
+      ) {
+        return "Aura Sentinel is different because we use adaptive AI detection beyond Google's Safe Browsing and typical extensions. Our engine catches new threats instantly.";
+      }
+      if (msg.includes("aura")) {
+        return "Aura Sentinel scans links in real-time to block phishing attempts. Ask about our features!";
+      }
+      if (msg.includes("tip")) {
+        return "🔒 Tip: Always check the website URL before entering personal details!";
+      }
+      if (msg.includes("number") || msg.includes("customer care") || msg.includes("phone")) {
+        return "☎ Customer Care: +91-9876543210";
+      }
+      return "Sorry, I didn't understand that. Ask about Aura Sentinel features, phishing, extension, or say 'help' for support.";
+    }
+
+    function sendChatbotMsg() {
+      let userTxt = chatbotInput.value.trim();
+      if (!userTxt) return;
+      addUserMsg(userTxt);
+      chatbotInput.value = "";
+      setTimeout(() => {
+        let reply = getBotResponse(userTxt);
+        addBotMsg(reply);
+      }, 400);
+    }
+
+    chatbotBtn.onclick = () => {
+      chatbot.style.display = chatbot.style.display === "flex" ? "none" : "flex";
+      if (chatbot.style.display === "flex") chatbotInput.focus();
+    };
+
+    chatbotSend.onclick = sendChatbotMsg;
+    chatbotInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") sendChatbotMsg();
+    });
+  </script>
+</body>
+</html>

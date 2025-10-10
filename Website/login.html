@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Aura Sentinel — Login</title>
+
+  <!-- Google fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+
+  <!-- shared CSS -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Three.js + Vanta (3D background) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta/dist/vanta.net.min.js"></script>
+</head>
+<body>
+  <div id="vanta-bg"></div>
+
+  <main class="login-page">
+    <div class="login-card" id="loginCard">
+      <div class="brand">
+        <h1>🛡️ Aura Sentinel</h1>
+        <p class="sub">AI-Enabled Phishing Detection</p>
+      </div>
+
+      <form id="loginForm">
+        <label>Email</label>
+        <input type="email" id="loginEmail" placeholder="you@domain.com" required>
+
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" required>
+
+        <button type="submit" class="primary-btn">Sign in</button>
+        <p class="muted">Or sign in with any test credentials (this is a demo login — front-end only).</p>
+      </form>
+
+      <div class="helper">
+        <p>New here? <strong>Members:</strong> Lakshya, Devansh, Niyati, Aabir</p>
+        <p class="small">Mini Hackathon — GLA Noida — <strong>3rd Position</strong></p>
+      </div>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
